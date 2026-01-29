@@ -28,25 +28,41 @@
     <div class="mb-8">
         <ul class="space-y-3">
             @foreach ($book->chapters as $chapter)
-                <li class="flex justify-between items-center
-                           border rounded p-3 bg-gray-50">
-                    <div>
-                        <p class="font-medium text-gray-800">
-                            Bab {{ $chapter->chapter_order }} :
-                            {{ $chapter->title }}
-                        </p>
-                        <p class="text-sm text-gray-500">
-                            {{ Str::limit(strip_tags($chapter->content), 80) }}
-                        </p>
-                    </div>
+               <li class="flex justify-between items-center
+           border rounded p-3 bg-gray-50">
+    <div>
+        <p class="font-medium text-gray-800">
+            Bab {{ $chapter->chapter_order }} :
+            {{ $chapter->title }}
+        </p>
+        <p class="text-sm text-gray-500">
+            {{ Str::limit(strip_tags($chapter->content), 80) }}
+        </p>
+    </div>
 
-                    <div class="flex gap-2">
-                        {{-- nanti bisa kita isi --}}
-                        <span class="text-xs text-gray-400">
-                            {{ $chapter->created_at->format('d M Y') }}
-                        </span>
-                    </div>
-                </li>
+    <div class="flex items-center gap-2">
+        {{-- Detail --}}
+        <a href="{{ route('writer.chapters.show', [$book, $chapter]) }}"
+           class="px-3 py-1 text-sm
+                  bg-sky-600 text-white rounded
+                  hover:bg-sky-700">
+            Detail
+        </a>
+
+        {{-- Edit --}}
+        <a href="{{ route('writer.chapters.edit', [$book, $chapter]) }}"
+           class="px-3 py-1 text-sm
+                  bg-amber-500 text-white rounded
+                  hover:bg-amber-600">
+            Edit
+        </a>
+
+        <span class="text-xs text-gray-400 ml-2">
+            {{ $chapter->created_at->format('d M Y') }}
+        </span>
+    </div>
+</li>
+
             @endforeach
         </ul>
     </div>
