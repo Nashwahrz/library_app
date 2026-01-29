@@ -9,6 +9,54 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow rounded p-6">
 
+                {{-- Section Bab --}}
+<div class="mb-6 border-b pb-4">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-gray-800">
+            📚 Bab Buku
+        </h3>
+
+        <a href="{{ route('writer.chapters.create', $book) }}"
+           class="px-4 py-2 bg-emerald-600 text-white rounded
+                  hover:bg-emerald-700">
+            + Tambah Bab
+        </a>
+    </div>
+</div>
+
+@if ($book->chapters->count())
+    <div class="mb-8">
+        <ul class="space-y-3">
+            @foreach ($book->chapters as $chapter)
+                <li class="flex justify-between items-center
+                           border rounded p-3 bg-gray-50">
+                    <div>
+                        <p class="font-medium text-gray-800">
+                            Bab {{ $chapter->chapter_order }} :
+                            {{ $chapter->title }}
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            {{ Str::limit(strip_tags($chapter->content), 80) }}
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        {{-- nanti bisa kita isi --}}
+                        <span class="text-xs text-gray-400">
+                            {{ $chapter->created_at->format('d M Y') }}
+                        </span>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+@else
+    <div class="mb-8 p-4 bg-yellow-50 text-yellow-700 rounded">
+        Belum ada bab untuk buku ini.
+    </div>
+@endif
+
+
                 @if ($errors->any())
                     <div class="mb-4 bg-red-100 text-red-700 p-3 rounded">
                         <ul class="list-disc ml-5">

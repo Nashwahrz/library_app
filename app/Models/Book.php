@@ -27,4 +27,10 @@ class Book extends Model
     {
         return $this->hasMany(Pinjam::class);
     }
+    public function chapters()
+{
+    return $this->hasMany(Chapter::class)
+                ->orderBy('chapter_order');
+}
+
 }

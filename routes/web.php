@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WriterApprovalController;
 use App\Http\Controllers\Writer\BookController;
+use App\Http\Controllers\Writer\ChapterController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -34,3 +35,14 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->prefix('writer')->name('writer.')->group(function () {
     Route::resource('books',BookController::class);
 });
+
+Route::middleware(['auth'])->prefix('writer')->name('writer.')->group(function () {
+    Route::get('books/{book}/chapters/create',
+        [ChapterController::class, 'create']
+    )->name('chapters.create');
+
+    Route::post('books/{book}/chapters',
+        [ChapterController::class, 'store']
+    )->name('chapters.store');
+});
+

@@ -11,8 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chapters', function (Blueprint $table) {
+         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('book_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+
+            $table->string('title');          // Judul Bab
+            $table->longText('content');      // Isi Bab
+            $table->integer('chapter_order'); // Urutan Bab
             $table->timestamps();
         });
     }
