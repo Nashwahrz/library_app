@@ -35,8 +35,9 @@ class ChapterController extends Controller
         ]);
 
         return redirect()
-            ->route('writer.books.edit')
-            ->with('success', 'Bab berhasil ditambahkan');
+    ->route('writer.books.edit', $book)
+    ->with('success', 'Bab berhasil ditambahkan');
+
     }
     public function show(Book $book, Chapter $chapter)
 {
@@ -72,6 +73,15 @@ public function update(Request $request, Book $book, Chapter $chapter)
     return redirect()
         ->route('writer.chapters.show', [$book, $chapter])
         ->with('success', 'Bab berhasil diperbarui');
+}
+public function destroy(Book $book, Chapter $chapter)
+{
+    abort_if($book->writer_id !== Auth::id(), 403);
+    abort_if($chapter->book_id !== $book->id, 404);
+
+    $chapter->delete();
+
+    return back()->with('success', 'Bab berhasil dihapus');
 }
 
 }

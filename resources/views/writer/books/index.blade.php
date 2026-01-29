@@ -1,79 +1,78 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800">
-            📚 Buku Saya
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-bold text-2xl text-slate-800 tracking-tight">
+                Buku <span class="text-indigo-600">Saya</span>
+            </h2>
+            <a href="{{ route('writer.books.create') }}"
+               class="px-5 py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition shadow-sm">
+                + Tambah Buku
+            </a>
+        </div>
     </x-slot>
 
-    <div class="p-6 bg-white rounded-lg shadow-sm">
+    <div class="py-10 bg-gray-50 min-h-screen">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <a href="{{ route('writer.books.create') }}"
-           class="inline-block px-4 py-2 mb-4 bg-emerald-600
-                  hover:bg-emerald-700 text-white rounded transition">
-            + Tambah Buku
-        </a>
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-emerald-50 text-emerald-700 text-sm font-bold rounded-xl border border-emerald-100">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-        @if(session('success'))
-            <div class="mb-4 p-3 rounded bg-emerald-100 text-emerald-800">
-                {{ session('success') }}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-100">
+                            <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-400">Judul & Kategori</th>
+                            <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-400 text-center">Tahun</th>
+                            <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-400 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @forelse($books as $book)
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-4">
+                                        @if($book->cover)
+                                            <img src="{{ asset('storage/'.$book->cover) }}" class="w-10 h-14 object-cover rounded shadow-sm">
+                                        @else
+                                            <div class="w-10 h-14 bg-gray-100 rounded flex items-center justify-center text-gray-300 text-[10px] font-bold">NO</div>
+                                        @endif
+                                        <div>
+                                            <div class="font-bold text-gray-900 leading-none mb-1">{{ $book->book_name }}</div>
+                                            <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">{{ $book->category }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5 text-center text-sm font-medium text-gray-500">
+                                    {{ $book->tahun_terbit }}
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="flex justify-end items-center gap-3">
+                                        <a href="{{ route('writer.books.edit', $book) }}" class="text-sm font-bold text-gray-400 hover:text-amber-500 transition">
+                                            Edit
+                                        </a>
+                                        <span class="text-gray-200">|</span>
+                                        <form method="POST" action="{{ route('writer.books.destroy', $book) }}" onsubmit="return confirm('Hapus buku?')">
+                                            @csrf @method('DELETE')
+                                            <button class="text-sm font-bold text-gray-400 hover:text-rose-500 transition">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-16 text-center text-gray-400 italic text-sm">
+                                    Belum ada karya yang tersimpan.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @endif
-
-        <div class="overflow-x-auto">
-            <table class="w-full border border-gray-200 text-sm">
-                <thead>
-                    <tr class="bg-gray-50 text-gray-700">
-                        <th class="p-3 text-left">Judul</th>
-                        <th class="p-3 text-left">Kategori</th>
-                        <th class="p-3 text-center">Tahun</th>
-                        <th class="p-3 text-center">Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y">
-                    @forelse($books as $book)
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-3 font-medium text-gray-800">
-                                {{ $book->book_name }}
-                            </td>
-
-                            <td class="p-3 text-gray-600">
-                                {{ $book->category }}
-                            </td>
-
-                            <td class="p-3 text-center text-gray-600">
-                                {{ $book->tahun_terbit }}
-                            </td>
-
-                            <td class="p-3 flex justify-center gap-2">
-                                <a href="{{ route('writer.books.edit', $book) }}"
-                                   class="px-3 py-1 bg-amber-500
-                                          hover:bg-amber-600 text-white rounded">
-                                    Edit
-                                </a>
-
-                                <form method="POST"
-                                      action="{{ route('writer.books.destroy', $book) }}"
-                                      onsubmit="return confirm('Yakin hapus buku ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button
-                                        class="px-3 py-1 bg-rose-600
-                                               hover:bg-rose-700 text-white rounded">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="p-4 text-center text-gray-500">
-                                Belum ada buku yang dibuat
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
     </div>
 </x-app-layout>

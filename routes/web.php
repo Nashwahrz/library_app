@@ -5,18 +5,38 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WriterApprovalController;
 use App\Http\Controllers\Writer\BookController;
 use App\Http\Controllers\Writer\ChapterController;
+use App\Http\Controllers\Reader\PinjamController;
+use App\Http\Controllers\Reader\BookDetailController;
+use App\Http\Controllers\Reader\BookReadController;
 use App\Models\Book;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
-Route::get('/', function () {
-    $books = Book::latest()->get();
-    // kalau mau khusus writer login:
     // $books = Book::where('writer_id', Auth::id())->latest()->get();
+Route::get('/', function (Request $request) {
 
-    return view('dashboard', compact('books'));
+    $search = $request->search;       // input teks
+    $category = $request->category;   // dropdown kategori
+
+    // Query buku
+    $books = Book::query()
+        ->when($search, function ($query, $search) {
+            $query->where('book_name', 'like', "%{$search}%")
+                  ->orWhere('penulis', 'like', "%{$search}%");
+        })
+        ->when($category, function ($query, $category) {
+            $query->where('category', $category);
+        })
+        ->latest()
+        ->get();
+
+    // Ambil semua kategori unik
+    $categories = Book::distinct()->pluck('category');
+
+    return view('dashboard', compact('books', 'categories'));
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -91,5 +111,44 @@ Route::middleware(['auth'])
             [ChapterController::class, 'destroy']
         )->name('chapters.destroy');
     });
+Route::middleware(['auth'])
+    ->prefix('reader')
+    ->name('reader.')
+    ->group(function () {
+
+        Route::post('/books/{book}/pinjam',
+            [PinjamController::class, 'store']
+        )->name('pinjam.store');
+
+    });
+Route::get('/books/{book}', [BookDetailController::class, 'show'])
+    ->name('books.show');
 
 
+
+Route::middleware(['auth'])
+    ->prefix('reader')
+    ->name('reader.')
+    ->group(function () {
+
+        Route::get('/books/{book}/read',
+            [BookReadController::class, 'index']
+        )->name('books.read');
+
+        Route::get('/books/{book}/read/{chapter}',
+            [BookReadController::class, 'show']
+        )->name('books.read.chapter');
+    });
+Route::middleware(['auth'])
+    ->prefix('reader')
+    ->name('reader.')
+    ->group(function () {
+
+        Route::get('/pinjaman',
+            [PinjamController::class, 'index']
+        )->name('pinjaman.index');
+
+        Route::post('/pinjam/{book}',
+            [PinjamController::class, 'store']
+        )->name('pinjam.store');
+    });

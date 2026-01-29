@@ -40,7 +40,7 @@
             <footer class="bg-white border-t border-slate-200 py-6">
                 <div class="max-w-7xl mx-auto px-4 text-center">
                     <p class="text-xs text-slate-400 font-medium uppercase tracking-widest">
-                        &copy; {{ date('Y') }} {{ config('app.name') }} — Sistem Perpustakaan Digital
+                        &copy; {{ date('Y') }} NashwaLibrary — Sistem Perpustakaan Digital
                     </p>
                 </div>
             </footer>

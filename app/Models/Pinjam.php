@@ -38,6 +38,7 @@ class Pinjam extends Model
     {
         return $this->belongsTo(Book::class);
     }
+ 
 
     /* =========================
        HELPER / LOGIC
