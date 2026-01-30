@@ -44,7 +44,7 @@ class BookReadController extends Controller
             abort(403, 'Akses baca sudah berakhir');
         }
 
-        // pastikan bab milik buku ini
+      
         abort_if($chapter->book_id !== $book->id, 404);
 
         return view('reader.books.read-chapter', compact(

@@ -14,19 +14,23 @@
 
                 {{-- Desktop Menu --}}
                 <div class="hidden space-x-4 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-sm font-bold tracking-tight">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-
-                    @if(in_array(auth()->user()->role, ['reader', 'writer']))
+                    @if(auth()->user()->role === 'reader' || auth()->user()->role === 'writer')
+                        {{-- Pinjaman Reader --}}
                         <x-nav-link :href="route('reader.pinjaman.index')" :active="request()->routeIs('reader.pinjaman.*')" class="text-sm font-bold tracking-tight">
                             Pinjaman Saya
                         </x-nav-link>
-                    @endif
 
-                    @if(auth()->user()->role === 'writer' && auth()->user()->status === 'active')
-                        <x-nav-link :href="route('writer.books.index')" :active="request()->routeIs('writer.books.*')" class="text-sm font-bold tracking-tight">
-                            Kelola Buku
+                        {{-- Kelola Buku Writer --}}
+                        @if(auth()->user()->role === 'writer' && auth()->user()->status === 'active')
+                            <x-nav-link :href="route('writer.books.index')" :active="request()->routeIs('writer.books.*')" class="text-sm font-bold tracking-tight">
+                                Kelola Buku
+                            </x-nav-link>
+                        @endif
+
+                    @elseif(auth()->user()->role === 'admin')
+                        {{-- Admin hanya menu konfirmasi writers --}}
+                        <x-nav-link :href="route('admin.writers')" :active="request()->routeIs('admin.writers.*')" class="text-sm font-bold tracking-tight">
+                            Konfirmasi Writers
                         </x-nav-link>
                     @endif
                 </div>
@@ -54,7 +58,7 @@
                             </div>
 
                             <x-dropdown-link :href="route('profile.edit')" class="rounded-xl font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">
-                                👤 {{ __('Profil') }}
+                                👤 Profil
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
@@ -62,7 +66,7 @@
                                 <x-dropdown-link :href="route('logout')"
                                         class="rounded-xl font-bold text-rose-500 hover:bg-rose-50 hover:text-rose-600"
                                         onclick="event.preventDefault(); this.closest('form').submit();">
-                                    🚪 {{ __('Log Out') }}
+                                    🚪 Log Out
                                 </x-dropdown-link>
                             </form>
                         </div>
@@ -85,19 +89,19 @@
     {{-- Mobile Menu --}}
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-slate-50">
         <div class="p-4 space-y-2">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="rounded-xl font-bold">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            @if(in_array(auth()->user()->role, ['reader', 'writer']))
+            @if(auth()->user()->role === 'reader' || auth()->user()->role === 'writer')
                 <x-responsive-nav-link :href="route('reader.pinjaman.index')" :active="request()->routeIs('reader.pinjaman.*')" class="rounded-xl font-bold">
-                    📚 Pinjaman Saya
+                    Pinjaman Saya
                 </x-responsive-nav-link>
-            @endif
 
-            @if(auth()->user()->role === 'writer' && auth()->user()->status === 'active')
-                <x-responsive-nav-link :href="route('writer.books.index')" :active="request()->routeIs('writer.books.*')" class="rounded-xl font-bold">
-                    ✍️ Kelola Buku
+                @if(auth()->user()->role === 'writer' && auth()->user()->status === 'active')
+                    <x-responsive-nav-link :href="route('writer.books.index')" :active="request()->routeIs('writer.books.*')" class="rounded-xl font-bold">
+                        Kelola Buku
+                    </x-responsive-nav-link>
+                @endif
+            @elseif(auth()->user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.writers')" :active="request()->routeIs('admin.writers.*')" class="rounded-xl font-bold">
+                    Konfirmasi Writers
                 </x-responsive-nav-link>
             @endif
         </div>
@@ -116,7 +120,7 @@
 
             <div class="px-4 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')" class="rounded-xl font-bold">
-                    {{ __('Profile') }}
+                    Profil
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">
@@ -124,7 +128,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                             class="rounded-xl font-bold text-rose-600 hover:bg-rose-50"
                             onclick="event.preventDefault(); this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        Log Out
                     </x-responsive-nav-link>
                 </form>
             </div>

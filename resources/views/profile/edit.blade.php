@@ -26,17 +26,17 @@
     <div class="py-12 bg-[#f8fafc] min-h-screen">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-            {{-- Bagian Update Informasi Profil --}}
+            {{--Update Informasi Profil --}}
             <div class="transition-all duration-300 hover:translate-y-[-2px]">
                 @include('profile.partials.update-profile-information-form')
             </div>
 
-            {{-- Bagian Update Password --}}
+            {{--Update Password --}}
             <div class="transition-all duration-300 hover:translate-y-[-2px]">
                 @include('profile.partials.update-password-form')
             </div>
 
-            {{-- Bagian Hapus Akun --}}
+            {{--Hapus Akun --}}
             <div class="transition-all duration-300 hover:translate-y-[-2px] opacity-90 hover:opacity-100">
                 @include('profile.partials.delete-user-form')
             </div>
